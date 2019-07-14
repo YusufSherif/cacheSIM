@@ -3,7 +3,7 @@
 
 int main()
 {
-    cache sim;
+    cache sim(8);
     sim.simulate();
 
 }

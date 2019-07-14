@@ -7,15 +7,15 @@
 
 #include <iostream>
 #include <iomanip>
+#include <vector>
+
+#include "cacheLine.h"
 
 using namespace std;
 
-#define		DBG				1
-#define		DRAM_SIZE		(64*1024*1024)
-#define		CACHE_SIZE		(64*1024)
-
-
 class cache {
+    int numOfBlocks;
+    std::vector<cacheLine> cacheLines;
 
     enum cacheResType {MISS=0, HIT=1};
 
@@ -34,6 +34,7 @@ class cache {
     cacheResType cacheSimDM(unsigned int addr);
 
 public:
+    cache(int blockSize);
     void simulate();
 };
 

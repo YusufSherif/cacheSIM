@@ -53,6 +53,20 @@ unsigned int cache::memGenF()
 }
 
 cache::cacheResType cache::cacheSimDM(unsigned int addr) {
+    //cacheLine x(0);
+    int index = addr%numOfBlocks;
+    if(!cacheLines[index].getValidBit()){
+        cacheLines[index].fill(addr);
+        return MISS;
+    }
+
+    if(cacheLines[index].getTag()==(addr >> (int)log2(numOfBlocks))) {
+        return HIT;
+    } else {
+        cacheLines[index].fill(addr);
+        return MISS;
+    }
+
     // This function accepts the memory address for the memory transaction and
     // returns whether it caused a cache miss or a cache hit
 
@@ -61,7 +75,7 @@ cache::cacheResType cache::cacheSimDM(unsigned int addr) {
 }
 
 
-#define		NO_OF_Iterations	100		// CHange to 1,000,000
+#define		NO_OF_Iterations	1000000		// CHange to 1,000,000
 
 void cache::simulate() {
     char *msg[2] = {"Miss","Hit"};
@@ -79,6 +93,13 @@ void cache::simulate() {
         if(r == HIT) hit++;
         cout <<"0x" << setfill('0') << setw(8) << hex << addr <<" ("<< msg[r] <<")\n";
     }
-    cout << "Hit ratio = " << (100*hit/NO_OF_Iterations)<< endl;
+    cout << "Hit ratio = " <<dec<< (100*hit/NO_OF_Iterations)<< endl;
 
+}
+
+cache::cache(int blockSize) {
+    numOfBlocks = CACHE_SIZE/blockSize;
+    for(int i = 0; i<numOfBlocks; i++) {
+        cacheLines.emplace_back(blockSize);
+    }
 }
