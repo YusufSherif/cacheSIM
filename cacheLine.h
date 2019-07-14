@@ -12,14 +12,23 @@
 #define		CACHE_SIZE		(64*1024)
 
 class cacheLine {
-    int blockSize;
     bool validBit;
     unsigned int tag;
     int address;
     int offset;
     int data;
+
 public:
-    cacheLine(int p_blockSize);
+
+    static int blockSize;
+    static int offsetBits;
+    static int indexBits;
+    static int tagBits;
+
+    static void initLines(int p_blockSize);
+
+
+    cacheLine();
     bool getValidBit();
 
     void fill(unsigned int addr);

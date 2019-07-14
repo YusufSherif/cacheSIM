@@ -55,12 +55,13 @@ unsigned int cache::memGenF()
 cache::cacheResType cache::cacheSimDM(unsigned int addr) {
     //cacheLine x(0);
     int index = addr%numOfBlocks;
+    int index1 = (((addr)>>cacheLine::offsetBits)&((int)pow(2,cacheLine::indexBits)-1));
     if(!cacheLines[index].getValidBit()){
         cacheLines[index].fill(addr);
         return MISS;
     }
 
-    if(cacheLines[index].getTag()==(addr >> (int)log2(numOfBlocks))) {
+    if(cacheLines[index].getTag()==(addr >> (cacheLine::indexBits+cacheLine::offsetBits))) {
         return HIT;
     } else {
         cacheLines[index].fill(addr);
@@ -75,7 +76,7 @@ cache::cacheResType cache::cacheSimDM(unsigned int addr) {
 }
 
 
-#define		NO_OF_Iterations	1000000		// CHange to 1,000,000
+#define		NO_OF_Iterations	1000000		// Change to 1,000,000
 
 void cache::simulate() {
     char *msg[2] = {"Miss","Hit"};
@@ -88,7 +89,7 @@ void cache::simulate() {
 
     for(int inst=0;inst<NO_OF_Iterations;inst++)
     {
-        addr = memGenB();
+        addr = memGenF();
         r = cacheSimDM(addr);
         if(r == HIT) hit++;
         cout <<"0x" << setfill('0') << setw(8) << hex << addr <<" ("<< msg[r] <<")\n";
@@ -99,7 +100,8 @@ void cache::simulate() {
 
 cache::cache(int blockSize) {
     numOfBlocks = CACHE_SIZE/blockSize;
+    cacheLine::initLines(blockSize);
     for(int i = 0; i<numOfBlocks; i++) {
-        cacheLines.emplace_back(blockSize);
+        cacheLines.emplace_back();
     }
 }
