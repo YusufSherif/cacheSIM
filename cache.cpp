@@ -1,7 +1,3 @@
-//
-// Created by Yusuf Sherif on 2019-07-14.
-//
-
 #include "cache.h"
 
 unsigned int cache::rand_()
@@ -53,28 +49,19 @@ unsigned int cache::memGenF()
 }
 
 cache::cacheResType cache::cacheSimDM(unsigned int addr) {
-    //cacheLine x(0);
-    int index = addr%numOfBlocks;
-    int index1 = (((addr)>>cacheLine::offsetBits)&((int)pow(2,cacheLine::indexBits)-1));
+    int index = (addr/blockSize)%numOfBlocks;
     if(!cacheLines[index].getValidBit()){
         cacheLines[index].fill(addr);
         return MISS;
-    }
-
-    if(cacheLines[index].getTag()==(addr >> (cacheLine::indexBits+cacheLine::offsetBits))) {
-        return HIT;
     } else {
-        cacheLines[index].fill(addr);
-        return MISS;
+        if (cacheLines[index].getTag() == (addr / blockSize / numOfBlocks)) {
+            return HIT;
+        } else {
+            cacheLines[index].fill(addr);
+            return MISS;
+        }
     }
-
-    // This function accepts the memory address for the memory transaction and
-    // returns whether it caused a cache miss or a cache hit
-
-    // The current implementation assumes there is no cache; so, every transaction is a miss
-    return MISS;
 }
-
 
 #define		NO_OF_Iterations	1000000		// Change to 1,000,000
 
@@ -89,19 +76,24 @@ void cache::simulate() {
 
     for(int inst=0;inst<NO_OF_Iterations;inst++)
     {
-        addr = memGenF();
+        addr = memGenA();
         r = cacheSimDM(addr);
         if(r == HIT) hit++;
-        cout <<"0x" << setfill('0') << setw(8) << hex << addr <<" ("<< msg[r] <<")\n";
+        //cout <<"0x" << setfill('0') << setw(8) << hex << addr <<" ("<< msg[r] <<")\n";
     }
     cout << "Hit ratio = " <<dec<< (100*hit/NO_OF_Iterations)<< endl;
 
 }
 
-cache::cache(int blockSize) {
-    numOfBlocks = CACHE_SIZE/blockSize;
-    cacheLine::initLines(blockSize);
+cache::cache(int p_blockSize) {
+    numOfBlocks = CACHE_SIZE/p_blockSize;
+    blockSize = p_blockSize;
+    cacheLine::initLines(p_blockSize);
     for(int i = 0; i<numOfBlocks; i++) {
         cacheLines.emplace_back();
     }
+}
+
+cache::~cache() {
+
 }

@@ -1,7 +1,3 @@
-//
-// Created by Yusuf Sherif on 2019-07-14.
-//
-
 #ifndef CACHESIM_CACHELINE_H
 #define CACHESIM_CACHELINE_H
 
@@ -12,28 +8,23 @@
 #define		CACHE_SIZE		(64*1024)
 
 class cacheLine {
+private:
     bool validBit;
     unsigned int tag;
     int address;
     int offset;
     int data;
 
-public:
+    static int blockSize, numOfBlocks;
 
-    static int blockSize;
-    static int offsetBits;
-    static int indexBits;
-    static int tagBits;
+public:
+    cacheLine();
+    void fill(unsigned int addr);
+    bool getValidBit();
+    unsigned int getTag();
 
     static void initLines(int p_blockSize);
-
-
-    cacheLine();
-    bool getValidBit();
-
-    void fill(unsigned int addr);
-
-    unsigned int getTag();
+    ~cacheLine();
 };
 
 

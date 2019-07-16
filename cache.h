@@ -1,7 +1,3 @@
-//
-// Created by Yusuf Sherif on 2019-07-14.
-//
-
 #ifndef CACHESIM_CACHE_H
 #define CACHESIM_CACHE_H
 
@@ -14,7 +10,8 @@
 using namespace std;
 
 class cache {
-    int numOfBlocks;
+private:
+    int numOfBlocks, blockSize;
     std::vector<cacheLine> cacheLines;
 
     enum cacheResType {MISS=0, HIT=1};
@@ -34,8 +31,9 @@ class cache {
     cacheResType cacheSimDM(unsigned int addr);
 
 public:
-    cache(int blockSize);
+    cache(int p_blockSize);
     void simulate();
+    ~cache();
 };
 
 
