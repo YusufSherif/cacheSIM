@@ -19,6 +19,7 @@ private:
     unsigned int rand_();
     unsigned int memGenA();
     unsigned int memGenB();
+    unsigned int memGenBSeeded();
     unsigned int memGenC();
     unsigned int memGenD();
     unsigned int memGenE();

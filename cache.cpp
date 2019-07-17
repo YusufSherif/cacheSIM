@@ -31,6 +31,11 @@ unsigned int cache::memGenB()
     //addresses to 64 KB memory address space.
 }
 
+unsigned int cache::memGenBSeeded() {
+    static unsigned int addr=0;
+    return  rand()%(64*1024);
+}
+
 unsigned int cache::memGenC() {
 
     static unsigned int a1=0, a0=0;
@@ -52,6 +57,7 @@ unsigned int cache::memGenC() {
     //for the index not changing between each iteration is higher since the index bits now reside in the upper 9 bits of
     //a0. This means that chances that we're accessing the same block but with different offsets, is higher as the
     //blockSize increases. Thus, the higher hit ratio in increased block sizes.
+    //
 }
 
 unsigned int cache::memGenD()
@@ -134,7 +140,7 @@ void cache::simulate() {
 
     for(int inst=0;inst<NO_OF_ITERATIONS;inst++)
     {
-        addr = memGenF();
+        addr = memGenBSeeded();
         r = cacheSimDM(addr);
         if(r == HIT) hit++;
         //cout <<"0x" << setfill('0') << setw(8) << hex << addr <<" ("<< msg[r] <<")\n";
