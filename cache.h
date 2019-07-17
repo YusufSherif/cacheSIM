@@ -23,6 +23,7 @@ private:
     unsigned int memGenD();
     unsigned int memGenE();
     unsigned int memGenF();
+    unsigned int memGenG();
 
     cacheResType cacheSimDM(unsigned int addr);
 

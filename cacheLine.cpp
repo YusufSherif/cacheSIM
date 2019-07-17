@@ -15,6 +15,9 @@ cacheLine::cacheLine() {
 void cacheLine::fill(unsigned int addr) {
     validBit = true;
     tag  = addr / numOfBlocks / blockSize;
+    //Depending on the blockSize, the tag is extracted. We first remove the offset bits by dividing by the blockSize.
+    //Then, we remove the index bits by dividing by numOfBlocks. We used the idea of right shifting through division
+    //that was discussed in the class here.
 }
 
 unsigned int cacheLine::getTag() {

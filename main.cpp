@@ -3,7 +3,7 @@
 
 int main()
 {
-    for(int i=4; i<=256; i*=2)
+    for(int i=4; i<=512; i*=2)
     {
         cache sim(i);
         sim.simulate();
