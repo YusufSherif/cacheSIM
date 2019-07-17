@@ -16,9 +16,6 @@ private:
 
     enum cacheResType {MISS=0, HIT=1};
 
-    /* The following implements a random number generator */
-    unsigned int m_w = 0xABCCAB55;    /* must not be zero, nor 0x464fffff */
-    unsigned int m_z = 0x05786902;    /* must not be zero, nor 0x9068ffff */
     unsigned int rand_();
     unsigned int memGenA();
     unsigned int memGenB();
@@ -26,7 +23,6 @@ private:
     unsigned int memGenD();
     unsigned int memGenE();
     unsigned int memGenF();
-
 
     cacheResType cacheSimDM(unsigned int addr);
 
