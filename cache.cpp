@@ -34,6 +34,7 @@ unsigned int cache::memGenB()
 unsigned int cache::memGenBSeeded() {
     static unsigned int addr=0;
     return  rand()%(64*1024);
+    //Uses seeded native rand function. rand was seeded in the main.
 }
 
 unsigned int cache::memGenC() {
@@ -49,7 +50,8 @@ unsigned int cache::memGenC() {
         a1=0;
     return(a1 + a0*128);
     //0 for 16 bits, a0 for 9 bits, a1 for 7 bits
-    //Tag is always 16 bits, this means that there will be no collision misses.
+    //Tag is always 16 bits, this means that there will be no collision misses. Tag 16 bits because we need the other
+    //16 bits because 2^16 = number of bytes which we have in the cache, which is the cache size.
     //So, misses are contributed to cold starts and blockSize. blockSize will contribute to the number of cold start
     //misses for the same reason as mentioned in D & E. It will also contribute to the hit ratio because as the
     //blockSize increases, the the offset bits increase, and in turn the index bits decrease shrinking to only come
@@ -109,6 +111,26 @@ unsigned int cache::memGenH() {
     //15 decimal precision, it was represented as 100. @1000 iterations, it was 99.9, @1M it was 99.9999
 }
 
+
+unsigned int cache::memGenI() {
+    static unsigned int addr=0;
+    static bool flag=false;
+    static unsigned counter=0;
+    counter++;
+    flag=!flag;
+    if(flag)
+        return addr;
+    else {
+        addr += ((counter << 16)+blockSize);
+        return addr;
+    }
+    //Changes the tag and the block on first iteration. Then, on the second, it sends the same address. If blockSize
+    //were not added, the hit ratio would be higher due to lower number of cold starts because at that point, we'd be
+    //accessing the same block at the same index but only changing the tag. Here, we're changing the tag and the block
+    //each two iterations.
+}
+
+
 cache::cacheResType cache::cacheSimDM(unsigned int addr) {
     //Index is extracted by dividing by blockSize (effectively shifting the offset bits to the right), then modding
     //with numOfBlocks (shifting the index bits to the right and then getting the remainder, effectively extracting the
@@ -127,7 +149,6 @@ cache::cacheResType cache::cacheSimDM(unsigned int addr) {
     }
 }
 
-#define		NO_OF_ITERATIONS	1000000		// Change to 1,000,000
 
 void cache::simulate() {
     char *msg[2] = {"Miss","Hit"};
@@ -140,7 +161,7 @@ void cache::simulate() {
 
     for(int inst=0;inst<NO_OF_ITERATIONS;inst++)
     {
-        addr = memGenBSeeded();
+        addr = memGenI();
         r = cacheSimDM(addr);
         if(r == HIT) hit++;
         //cout <<"0x" << setfill('0') << setw(8) << hex << addr <<" ("<< msg[r] <<")\n";

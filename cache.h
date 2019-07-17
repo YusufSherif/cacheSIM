@@ -9,6 +9,8 @@
 
 using namespace std;
 
+#define		NO_OF_ITERATIONS	1000000		// Change to 1,000,000
+
 class cache {
 private:
     int numOfBlocks, blockSize;
@@ -26,6 +28,7 @@ private:
     unsigned int memGenF();
     unsigned int memGenG();
     unsigned int memGenH();
+    unsigned int memGenI();
 
     cacheResType cacheSimDM(unsigned int addr);
 
