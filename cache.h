@@ -24,6 +24,7 @@ private:
     unsigned int memGenE();
     unsigned int memGenF();
     unsigned int memGenG();
+    unsigned int memGenH();
 
     cacheResType cacheSimDM(unsigned int addr);
 
